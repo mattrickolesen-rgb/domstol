@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hurtig POLSAS</title>
+    <style>
+        body {
+            font-family: "Merriweather", "Georgia", serif;
+            margin: 0;
+            padding: 70px 80px 90px;
+            background: linear-gradient(160deg, #0b1f2a 0%, #16344a 45%, #0f2a3a 100%);
+            color: #eef3f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+        .page-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .side-panel {
+            width: 220px;
+            background: #f7f9fb;
+            color: #0b1f2a;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 2px 0 12px rgba(13, 32, 45, 0.12);
+            position: sticky;
+            top: 90px;
+        }
+        .side-panel h3 {
+            margin: 0 0 12px;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+        .side-panel ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .side-panel li {
+            margin-bottom: 10px;
+        }
+        .side-panel a {
+            color: #1f2a33;
+            text-decoration: none;
+            display: block;
+            padding: 6px 8px;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+        .side-panel a:hover {
+            background: rgba(11, 31, 42, 0.08);
+            color: #0b1f2a;
+        }
+        @media (max-width: 900px) {
+            .page-layout {
+                flex-direction: column;
+            }
+            .side-panel {
+                width: 100%;
+                position: static;
+            }
+            .page-content {
+                justify-content: stretch;
+            }
+        }
+        .card {
+            background: #f7f9fb;
+            color: #0b1f2a;
+            padding: 34px;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(13, 32, 45, 0.15);
+            width: min(600px, 100%);
+            margin: 40px auto;
+        }
+        h1 {
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+            margin-bottom: 18px;
+        }
+        .primary-button {
+            background: #0b1f2a;
+            color: #f2f6fb;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+        .primary-button:hover {
+            background: #132d3a;
+            transform: translateY(-2px);
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .field label {
+            font-weight: 600;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+        .field input, .field select {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #d6dce2;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-layout">
+        <div class="page-content">
+            <div class="card">
+                <h1>Hurtig POLSAS</h1>
+                <form id="hurtig-polsas-form">
+            <div class="field">
+                <label for="journal">Journalnummer</label>
+                <input id="journal" name="journal" type="text" required>
+            </div>
+            <div class="field">
+                <label for="titel">Titel</label>
+                <input id="titel" name="titel" type="text" required>
+            </div>
+            <div class="field">
+                <label for="kategori">Kategori</label>
+                <select id="kategori" name="kategori" required>
+                    <option value="">Vælg kategori</option>
+                    <option value="indbrud">Indbrud</option>
+                    <option value="tyveri">Tyveri</option>
+                    <option value="hærværk">Hærværk</option>
+                    <option value="vold">Vold</option>
+                    <option value="andet">Andet</option>
+                </select>
+            </div>
+            <div id="resultat-oversigt" style="margin-bottom:20px;padding:10px;background:#f8f8f8;border-radius:8px;border:1px solid #ccc;">
+    <strong>Resultat:</strong><br>
+    <span id="totalBode">Bøde: 0 kr</span> | 
+    <span id="totalFaengsel">Fængselstid: 0 dage</span> | 
+    <span id="totalFrakendelse">Frakendelse: Nej</span>
+</div>
+            <div class="field">
+                <label><strong>Vælg sigtelser:</strong></label>
+                <div id="sigtelser-list"></div>
+                <div style="margin-top:8px;font-weight:600;">Valgte sigtelser: <span id="sigtelser-counter">0</span></div>
+            </div>
+            <div id="strafoverblik" style="background:#eef3f8;color:#0b1f2a;padding:16px;border-radius:10px;margin-bottom:16px;display:none;"></div>
+            <button class="primary-button" type="submit">Opret hurtig sag</button>
+                </form>
+            </div>
+        </div>
+        <aside class="side-panel">
+            <h3>Genveje</h3>
+            <ul>
+                <li><a href="polintra.html">POLintra</a></li>
+                <li><a href="polintra.html#tab-drift">Medarbejdere</a></li>
+                <li><a href="opret-sag.html">Opret sag</a></li>
+                <li><a href="polsas.html">POLSAS</a></li>
+                <li><a href="index.html">Forside</a></li>
+            </ul>
+        </aside>
+    </div>
+    <script>
+        const sigtelsesData = {
+        // Straffeloven (eksempler fra chat)
+        sl232_kraenkende: { bode: 75000, dage: 0, navn: 'SL. §232 — Krænkende adfærd (sexchikane m.v.)' },
+        sl288_pengetransport: { bode: 33000, dage: 15, navn: 'SL. §288 — Røveri mod pengetransport' },
+        sl276_indbrud: { bode: 85500, dage: 8, navn: 'SL. §276 — Indbrudstyveri' },
+        sl121_haen: { bode: 30000, dage: 5, navn: '§121 — Hån/skældsord/fornærmelig tiltale' },
+        sl264_adgang: { bode: 35000, dage: 5, navn: 'SL. §264 — Uberettiget adgang til hus/ikke frit sted' },
+        sl133a_bande: { bode: 500000, dage: 45, navn: 'SL. §133 a — Forbudt bande/forening' },
+        sl119_vold: { bode: 137500, dage: 10, navn: 'SL. §119 — Vold mod tjenestemand i funktion' },
+        sl119_trusler: { bode: 80000, dage: 5, navn: 'SL. §119, stk. 2 — Trusler mod tjenestemand i funktion' },
+        sl119_forstyrrelse: { bode: 65500, dage: 5, navn: 'SL. §119, stk. 4 — Grov forstyrrelse af den offentlige orden' },
+        sl114_terror: { bode: 350000, dage: 30, navn: 'SL. §114 — Terror' },
+        sl157_tjenesteforsoemmelse: { bode: 250000, dage: 25, navn: 'SL. §157 — Tjenesteforsømmelse' },
+        sl264d_billeder: { bode: 50000, dage: 10, navn: 'SL. §264d — Videredeling af private billeder' },
+        sl252_fare: { bode: 65000, dage: 10, navn: 'SL. §252 — Sætte andres liv i fare' },
+        sl253_faerdsel: { bode: 25000, dage: 5, navn: 'SL. §253 — Flugt fra færdselsuheld' },
+        sl261_gidsel: { bode: 455000, dage: 15, navn: 'SL. §261 — Gidseltagning' },
+        sl261_gidsel_embedsmand: { bode: 900000, dage: 20, navn: 'SL. §261 — Gidseltagning på embedsmand' },
+        sl266_trusler: { bode: 65500, dage: 5, navn: 'SL. §266 — Trusler' },
+        sl288_bankroeveri: { bode: 350000, dage: 20, navn: 'SL. §288 — Bankrøveri' },
+        sl288_butikstyveri: { bode: 250500, dage: 15, navn: 'SL. §288 — Butikstyveri' },
+        sl289_sorte: { bode: 0, dage: 0, navn: 'SL. §289 — Besiddelse af sorte penge' },
+        sl291_haervaerk: { bode: 55000, dage: 0, navn: 'SL. §291 — Hærværk' },
+        sl293a_brugstyveri: { bode: 125000, dage: 15, navn: 'SL. §293 a — Brugstyveri' },
+        sl124_flight: { bode: 250000, dage: 20, navn: 'SL. §124 — Flugt fra politiet' },
+        sl252_hensynsloes: { bode: 135000, dage: 5, navn: 'SL. §252 — Hensynsløs kørsel' },
+        lokal_beslag: { bode: 0, dage: 0, navn: '(Lokalt) — Permanent beslaglæggelse af køretøj' },
+        sl121: { bode: 25500, dage: 0, navn: 'SL. §121 — Fornærmelser/krænkelser mod embedsmand' },
+        sl122: { bode: 100000, dage: 5, navn: 'SL. §122 — Forsøgt bestikkelse af politiet' },
+        sl134b: { bode: 15000, dage: 0, navn: 'SL. §134 b — Maskering' },
+        sl135: { bode: 1500, dage: 5, navn: 'SL. §135 — Misbrug af nødopkald' },
+        sl162: { bode: 25000, dage: 5, navn: 'SL. §162 — Falske anklager' },
+        sl172: { bode: 70000, dage: 5, navn: 'SL. §172 — Identifikations-/dokumentfalsk' },
+        sl237_mord: { bode: 750000, dage: 35, navn: 'SL. §237 — Mord' },
+        sl237_mordforsog: { bode: 350000, dage: 15, navn: 'SL. §237 — Mordforsøg' },
+        sl237_embedsmand: { bode: 1000000, dage: 45, navn: 'SL. §237 — Mord på embedsmand' },
+        sl237_embedsmandforsog: { bode: 450000, dage: 15, navn: 'SL. §237 — Mordforsøg på embedsmand' },
+        sl241: { bode: 125000, dage: 15, navn: 'SL. §241 — Uagtsomt manddrab' },
+        sl244: { bode: 75000, dage: 10, navn: 'SL. §244 — Vold' },
+        sl245: { bode: 175000, dage: 15, navn: 'SL. §245 — Grov vold' },
+    // Euforiserende stoffer
+    stof_kokain: { bode: 1000, dage: 1, navn: 'Besiddelse af Kokain' },
+    stof_heroin: { bode: 1000, dage: 1, navn: 'Besiddelse af Heroin' },
+    stof_metamfetamin: { bode: 750, dage: 1, navn: 'Besiddelse af Metamfetamin' },
+    stof_joints: { bode: 650, dage: 15, navn: 'Besiddelse af Joints' },
+    stof_svampe: { bode: 175, dage: 0, navn: 'Besiddelse af Svampe' },
+    stof_opium: { bode: 300, dage: 0, navn: 'Besiddelse af Opium' },
+    stof_kokaplanter: { bode: 785, dage: 1, navn: 'Besiddelse af Kokaplanter' },
+    stof_amfetamin: { bode: 650, dage: 0, navn: 'Besiddelse af Amfetamin' },
+    stof_hash: { bode: 650, dage: 0, navn: 'Besiddelse af Hash' },
+    // Våben & Knivloven
+    vl_assault_rifle: { bode: 600000, dage: 10, navn: 'Besiddelse af Assault Rifle' },
+    vl_scorpion: { bode: 600000, dage: 10, navn: 'Besiddelse af Scorpion' },
+    vl_navy_revolver: { bode: 600000, dage: 10, navn: 'Besiddelse af Navy Revolver' },
+    vl_micro_smg: { bode: 600000, dage: 10, navn: 'Besiddelse af Micro SMG' },
+    vl_mini_smg: { bode: 600000, dage: 10, navn: 'Besiddelse af Mini SMG' },
+    vl_tec9: { bode: 600000, dage: 10, navn: 'Besiddelse af Tec-9' },
+    vl_desert_eagle: { bode: 300000, dage: 10, navn: 'Besiddelse af Desert Eagle' },
+    vl_sawed_off: { bode: 150000, dage: 15, navn: 'Besiddelse af Sawed Off' },
+    vl_vintage_pistol: { bode: 150000, dage: 10, navn: 'Besiddelse af Vintage Pistol' },
+    vl_pistol: { bode: 150000, dage: 10, navn: 'Besiddelse af Pistol' },
+    vl_sns_pistol: { bode: 150000, dage: 10, navn: 'Besiddelse af SNS Pistol' },
+    vl_stikvaaben: { bode: 75000, dage: 5, navn: 'Besiddelse af Stikvåben' },
+    vl_ammunition: { bode: 350, dage: 0, navn: 'Besiddelse af Ammunition' },
+    vl_ulovlig_opbevaring: { bode: 10000, dage: 0, navn: 'Ulovlig opbevaring af våben' },
+    vl_slagvaaben: { bode: 75000, dage: 0, navn: 'Besiddelse af slagvåben' },
+    // Ordensbekendtgørelsen
+    obg_nej_efterkom: { bode: 55000, dage: 0, navn: 'Nægter at efterkomme politiets anvisninger' },
+    obg_gadeuorden: { bode: 60000, dage: 0, navn: 'Gadeuorden' },
+    obg_upassende: { bode: 55000, dage: 0, navn: 'Upassende opførsel' },
+    // Retsplejeloven
+    rpl_750: { bode: 95000, dage: 0, navn: 'Nægter at udlevere navn, fødselsdato og/eller adresse til politiet' },
+    // ...tilføj alle øvrige sigtelser fra tidligere version...
+};
+const sigtelserListDiv = document.getElementById('sigtelser-list');
+const sigtelserCounter = document.getElementById('sigtelser-counter');
+const strafDiv = document.getElementById('strafoverblik');
+let selectedSigtelser = {};
+
+function renderSigtelser() {
+    sigtelserListDiv.innerHTML = '';
+    Object.entries(sigtelsesData).forEach(([key, data]) => {
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.className = 'primary-button';
+        addBtn.style.margin = '2px 6px 2px 0';
+        addBtn.innerHTML = `✅`;
+        addBtn.title = 'Tilføj sigtelse';
+        addBtn.onclick = function() {
+            selectedSigtelser[key] = (selectedSigtelser[key] || 0) + 1;
+            updateCounterAndResult();
+        };
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'primary-button';
+        removeBtn.style.margin = '2px 6px 2px 0';
+        removeBtn.innerHTML = `❌`;
+        removeBtn.title = 'Fjern sigtelse';
+        removeBtn.onclick = function() {
+            if (selectedSigtelser[key]) {
+                selectedSigtelser[key]--;
+                if (selectedSigtelser[key] <= 0) delete selectedSigtelser[key];
+                updateCounterAndResult();
+            }
+        };
+        const label = document.createElement('span');
+        label.textContent = data.navn;
+        label.style.marginRight = '12px';
+        const countSpan = document.createElement('span');
+        countSpan.style.marginLeft = '8px';
+        countSpan.style.fontWeight = 'bold';
+        if (selectedSigtelser[key]) countSpan.textContent = selectedSigtelser[key] + 'x';
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.marginBottom = '4px';
+        row.appendChild(addBtn);
+        row.appendChild(removeBtn);
+        row.appendChild(label);
+        row.appendChild(countSpan);
+        sigtelserListDiv.appendChild(row);
+    });
+}
+
+function updateCounterAndResult() {
+    const total = Object.values(selectedSigtelser).reduce((a, b) => a + b, 0);
+    sigtelserCounter.textContent = total;
+    if (!total) {
+        strafDiv.style.display = 'none';
+        document.getElementById('totalBode').textContent = 'Bøde: 0 kr';
+        document.getElementById('totalFaengsel').textContent = 'Fængselstid: 0 dage';
+        document.getElementById('totalFrakendelse').textContent = 'Frakendelse: Nej';
+        renderSigtelser();
+        return;
+    }
+    let totalBode = 0;
+    let totalKlip = 0;
+    let totalDage = 0;
+    let frakendelse = false;
+    let details = [];
+    Object.entries(selectedSigtelser).forEach(([key, antal]) => {
+        const d = sigtelsesData[key];
+        if (d) {
+            totalBode += (d.bode || 0) * antal;
+            totalKlip += (d.klip || 0) * antal;
+            totalDage += (d.dage || 0) * antal;
+            if (d.frakendelse) frakendelse = true;
+            details.push(`${d.navn} (${antal}x): 🧾 ${(d.bode || 0) * antal} kr${typeof d.klip !== 'undefined' ? ' | ✂️ ' + ((d.klip || 0) * antal) : ''}${typeof d.dage !== 'undefined' ? ' | ⏱️ ' + ((d.dage || 0) * antal) + ' dage' : ''}${typeof d.frakendelse !== 'undefined' ? ' | ⛔ ' + (d.frakendelse ? 'Ja' : 'Nej') : ''}`);
+        }
+    });
+    strafDiv.innerHTML = `<strong>Strafoverblik:</strong><br>
+        ${details.join('<br>')}<hr>
+        <strong>Samlet bøde:</strong> ${totalBode} kr<br>
+        <strong>Samlet antal klip:</strong> ${totalKlip}<br>
+        <strong>Samlet fængselstid:</strong> ${totalDage} dage<br>
+        <strong>Frakendelse:</strong> ${frakendelse ? 'Ja' : 'Nej'}`;
+    strafDiv.style.display = 'block';
+    document.getElementById('totalBode').textContent = 'Bøde: ' + totalBode.toLocaleString() + ' kr';
+    document.getElementById('totalFaengsel').textContent = 'Fængselstid: ' + totalDage + ' dage';
+    document.getElementById('totalFrakendelse').textContent = 'Frakendelse: ' + (frakendelse ? 'Ja' : 'Nej');
+    renderSigtelser();
+}
+
+document.getElementById('hurtig-polsas-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Hurtig POLSAS-sag oprettet!');
+    this.reset();
+    selectedSigtelser = {};
+    updateCounterAndResult();
+});
+
+renderSigtelser();
+updateCounterAndResult();
+    </script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opret sag - Hovedstadens Politi</title>
+    <style>
+body {
+    font-family: "Merriweather", "Georgia", serif;
+    margin: 0;
+    padding: 70px 80px 90px;
+    background: linear-gradient(160deg, #0b1f2a 0%, #16344a 45%, #0f2a3a 100%);
+    background-attachment: fixed;
+    color: #eef3f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+}
+
+header {
+    background: #0b1f2a;
+    color: #f2f6fb;
+    padding: 16px 28px;
+    box-shadow: 0 6px 18px rgba(8, 23, 33, 0.25);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.4em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.logo img {
+    margin-right: 12px;
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: #f1c40f;
+    padding: 6px;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-link {
+    color: #f2f6fb;
+    text-decoration: none;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    font-size: 0.95em;
+    letter-spacing: 0.4px;
+}
+
+.nav-button {
+    color: #0b1f2a;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #f1c40f;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    font-weight: 600;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.nav-button:hover {
+    background: #ffd84d;
+    transform: translateY(-2px);
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+.page-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+.page-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+.side-panel {
+    width: 220px;
+    background: #f7f9fb;
+    color: #0b1f2a;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 2px 0 12px rgba(13, 32, 45, 0.12);
+    position: sticky;
+    top: 90px;
+}
+.side-panel h3 {
+    margin: 0 0 12px;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+.side-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.side-panel li {
+    margin-bottom: 10px;
+}
+.side-panel a {
+    color: #1f2a33;
+    text-decoration: none;
+    display: block;
+    padding: 6px 8px;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+.side-panel a:hover {
+    background: rgba(11, 31, 42, 0.08);
+    color: #0b1f2a;
+}
+@media (max-width: 900px) {
+    .page-layout {
+        flex-direction: column;
+    }
+    .side-panel {
+        width: 100%;
+        position: static;
+    }
+    .page-content {
+        justify-content: stretch;
+    }
+}
+
+.form-card {
+    width: min(860px, 100%);
+    background: #f7f9fb;
+    color: #0b1f2a;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(13, 32, 45, 0.15);
+}
+
+.form-card h1 {
+    margin: 0 0 12px;
+    font-size: 2.2em;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.form-card p {
+    margin: 0 0 30px;
+    color: #1f2a33;
+    line-height: 1.6;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px 24px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.field input,
+.field select,
+.field textarea {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #d6dce2;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    font-size: 0.95em;
+}
+
+.field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+.checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.95em;
+    color: #1f2a33;
+}
+
+.actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.primary-button {
+    background: #0b1f2a;
+    color: #f2f6fb;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.primary-button:hover {
+    background: #132d3a;
+    transform: translateY(-2px);
+}
+
+.ghost-button {
+    background: transparent;
+    color: #0b1f2a;
+    border: 1px solid #0b1f2a;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    cursor: pointer;
+}
+
+.notice {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(11, 31, 42, 0.08);
+    color: #1f2a33;
+    display: none;
+}
+
+.notice.show {
+    display: block;
+}
+
+footer {
+    background: #0b1f2a;
+    color: #f2f6fb;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+    box-shadow: 0 -6px 18px rgba(13, 32, 45, 0.2);
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+footer p {
+    margin: 0;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="politi.png" alt="Hovedstadens Politi logo">
+                Hovedstadens Politi
+            </div>
+            <div class="nav-actions">
+                <a class="nav-link" href="index.html">Forside</a>
+                <a class="nav-button" href="index.html#contact">Kontakt</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-layout">
+            <div class="page-content">
+                <div class="form-card">
+            <h1>Opret sag</h1>
+            <p>Udfyld formularen nedenfor for at oprette en sag. Data gemmes lokalt, og PDF downloades automatisk.</p>
+
+            <form id="case-form">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="title">Titel på sagen</label>
+                        <input id="title" name="title" type="text" placeholder="Kort overskrift" required>
+                    </div>
+                    <div class="field">
+                        <label for="category">Kategori</label>
+                        <select id="category" name="category" required>
+                            <option value="">Vælg kategori</option>
+                            <option value="indbrud">Indbrud</option>
+                            <option value="tyveri">Tyveri</option>
+                            <option value="hærværk">Hærværk</option>
+                            <option value="vold">Vold</option>
+                            <option value="andet">Andet</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="location">Adresse</label>
+                        <input id="location" name="location" type="text" placeholder="Gade og by" required>
+                    </div>
+                    <div class="field">
+                        <label for="incident-time">Dato og tidspunkt</label>
+                        <input id="incident-time" name="incident-time" type="datetime-local" required>
+                    </div>
+                    <div class="field full">
+                        <label for="details">Beskrivelse</label>
+                        <textarea id="details" name="details" placeholder="Fortæl kort hvad der er sket" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="name">Dit navn</label>
+                        <input id="name" name="name" type="text" placeholder="Fornavn og efternavn" required>
+                    </div>
+                    <div class="field">
+                        <label for="phone">Telefon</label>
+                        <input id="phone" name="phone" type="tel" placeholder="Telefonnummer" required>
+                    </div>
+                    <div class="field full">
+                        <label for="notes">Supplerende oplysninger</label>
+                        <textarea id="notes" name="notes" placeholder="Vidner, bilnummer, billeder, andet"></textarea>
+                    </div>
+                    <div class="field full checkbox">
+                        <input id="consent" name="consent" type="checkbox" required>
+                        <label for="consent">Jeg bekræfter, at oplysningerne er korrekte.</label>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="primary-button" type="submit">Opret sag</button>
+                    <button class="ghost-button" type="reset">Ryd formular</button>
+                </div>
+                <div id="case-notice" class="notice">
+                    Sagen er oprettet lokalt som demo. Brug kontaktkanalerne for officiel anmeldelse.
+                </div>
+            </form>
+                </div>
+            </div>
+            <aside class="side-panel">
+                <h3>Genveje</h3>
+                <ul>
+                    <li><a href="polintra.html">POLintra</a></li>
+                    <li><a href="polintra.html#tab-drift">Medarbejdere</a></li>
+                    <li><a href="opret-sag.html">Opret sag</a></li>
+                    <li><a href="polsas.html">POLSAS</a></li>
+                    <li><a href="index.html">Forside</a></li>
+                </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Hovedstadens Politi. Alle rettigheder forbeholdes.</p>
+    </footer>
+
+    <script src="jspdf.umd.min.js"></script>
+    <script>
+        const CASES_KEY = 'polintra-cases';
+        const form = document.getElementById('case-form');
+        const notice = document.getElementById('case-notice');
+
+        const makeCaseId = () => `CASE-${Date.now()}`;
+
+        const normalizeCategory = (value) =>
+            (value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+
+        const CATEGORY_PREFIX = {
+            indbrud: '1000-75171',
+            tyveri: '1000-75411',
+            vold: '1000-73212',
+            andet: '1000-73212',
+            hærværk: '1000-73212'
+        };
+
+        const buildJournalNumber = (category, cases) => {
+            const key = normalizeCategory(category);
+            const prefix = CATEGORY_PREFIX[key] || '1000-73212';
+            const count = cases.filter((c) => normalizeCategory(c.category) === key).length + 1;
+            const sequence = String(count).padStart(5, '0');
+            return `${prefix}-${sequence}-26`;
+        };
+
+        const formatDateParts = (value) => {
+            const date = value ? new Date(value) : new Date();
+            if (Number.isNaN(date.getTime())) {
+                return { dateLabel: '', timeLabel: '' };
+            }
+            const days = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
+            const months = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
+            return {
+                dateLabel: `${days[date.getDay()]} ${date.getDate()}. ${months[date.getMonth()]} ${date.getFullYear()}`,
+                timeLabel: `${String(date.getHours()).padStart(2, '0')}.${String(date.getMinutes()).padStart(2, '0')}`
+            };
+        };
+
+        const generatePdf = (payload) => {
+            const lib = window.jspdf;
+            if (!lib || !lib.jsPDF) {
+                console.warn('PDF bibliotek er ikke loadet');
+                return null;
+            }
+            const { jsPDF } = lib;
+            const doc = new jsPDF();
+
+            const { dateLabel, timeLabel } = formatDateParts(payload.incidentTime || payload.createdAt);
+            const wrap = (text, width) => doc.splitTextToSize(text && text.trim() ? text : '-', width);
+            const bodyLines = wrap(payload.details || 'Her skal brødtekst være', 180);
+            const noteLines = payload.notes ? wrap(`Supplerende: ${payload.notes}`, 180) : [];
+            let currentY = 18;
+
+            doc.setFont('times', 'normal');
+            doc.setFontSize(12);
+            doc.text('Hovedstadens Politi', 14, currentY);
+            currentY += 8;
+            doc.text('Midtby Politistation', 14, currentY);
+
+            doc.setFontSize(12);
+            doc.rect(128, 12, 68, 14);
+            doc.text('Anmeldelsesrapport', 162, 20, { align: 'center' });
+            doc.setFontSize(10);
+            doc.text('Journalnummer', 132, 26);
+            doc.setFontSize(12);
+            doc.text(payload.journalNumber || payload.id, 162, 32, { align: 'center' });
+
+            currentY = 44;
+            if (dateLabel) {
+                doc.text(dateLabel, 14, currentY);
+                currentY += 8;
+            }
+            if (timeLabel) {
+                doc.text(`klokken ${timeLabel}`, 14, currentY);
+                currentY += 8;
+            }
+
+            currentY += 6;
+            doc.setFontSize(12);
+            doc.text('Vælg anmelder', 14, currentY);
+            currentY += 8;
+            doc.setFontSize(11);
+            doc.text(payload.name || 'Ukendt navn', 14, currentY);
+            currentY += 8;
+            doc.text(`Telefon: ${payload.phone || '-'}`, 14, currentY);
+            currentY += 8;
+            doc.text(`Adresse: ${payload.location || '-'}`, 14, currentY);
+
+            currentY += 14;
+            doc.setFontSize(12);
+            doc.text('Sag', 14, currentY);
+            currentY += 8;
+            doc.setFontSize(11);
+            doc.text(`Overskrift: ${payload.title || '-'}`, 14, currentY);
+            currentY += 8;
+            doc.text(`Kategori: ${payload.category || '-'}`, 14, currentY);
+            currentY += 8;
+            doc.text(`Journalnummer: ${payload.journalNumber || '-'}`, 14, currentY);
+
+            currentY += 12;
+            doc.setFontSize(12);
+            doc.text('Brødtekst', 14, currentY);
+            currentY += 8;
+            doc.setFontSize(11);
+            doc.text(bodyLines, 14, currentY);
+            currentY += bodyLines.length * 6;
+
+            if (noteLines.length) {
+                currentY += 6;
+                doc.text(noteLines, 14, currentY);
+            }
+
+            const fileName = `sag-${payload.journalNumber || payload.id}.pdf`;
+            doc.save(fileName);
+            return doc.output('datauristring');
+        };
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const title = document.getElementById('title').value.trim();
+            const category = document.getElementById('category').value;
+            const location = document.getElementById('location').value.trim();
+            const incidentTime = document.getElementById('incident-time').value;
+            const details = document.getElementById('details').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            const id = makeCaseId();
+
+            const cases = JSON.parse(localStorage.getItem(CASES_KEY) || '[]');
+            const journalNumber = buildJournalNumber(category, cases);
+            const newCase = {
+                id,
+                journalNumber,
+                title,
+                category,
+                location,
+                incidentTime,
+                details,
+                name,
+                phone,
+                notes,
+                status: 'Åben',
+                createdAt: new Date().toISOString()
+            };
+            const pdfData = generatePdf(newCase);
+            if (pdfData) {
+                newCase.pdfData = pdfData;
+            }
+            cases.push(newCase);
+            localStorage.setItem(CASES_KEY, JSON.stringify(cases));
+            notice.classList.add('show');
+            notice.textContent = "Sagen er oprettet lokalt som demo, og PDF'en blev downloadet.";
+            form.reset();
+        });
+    </script>
+</body>
+</html>

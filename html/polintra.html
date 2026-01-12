@@ -1,0 +1,1159 @@
+﻿<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POLintra betjening</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --deep: #0b1f2a;
+      --accent: #f1c40f;
+      --muted: #6f7b8a;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "Verdana", sans-serif;
+      background: linear-gradient(160deg, #081220 0%, #14314a 60%, #0c1f30 100%);
+      color: #eef3f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: rgba(11, 31, 42, 0.9);
+      padding: 16px 32px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .nav-link,
+    .nav-button,
+    .nav-shortcut {
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      background: transparent;
+    }
+    .nav-button {
+      background: var(--accent);
+      color: var(--deep);
+      font-weight: 600;
+    }
+    .nav-shortcut {
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    .nav-shortcut:hover {
+      border-color: var(--accent);
+      background: rgba(241, 196, 15, 0.2);
+      transform: translateY(-1px);
+    }
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 24px 40px;
+    }
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .page-content {
+      flex: 1;
+      min-width: 0;
+      display: grid;
+      gap: 22px;
+    }
+    .side-panel {
+      width: 220px;
+      background: #f7f9fb;
+      color: #0b1f2a;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 2px 0 12px rgba(13, 32, 45, 0.12);
+      position: sticky;
+      top: 90px;
+    }
+    .side-panel h3 {
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", "Verdana", sans-serif;
+    }
+    .side-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-panel li {
+      margin-bottom: 10px;
+    }
+    .side-panel a {
+      color: #1f2a33;
+      text-decoration: none;
+      display: block;
+      padding: 6px 8px;
+      border-radius: 10px;
+      transition: background-color 0.3s, color 0.3s;
+      font-family: "Space Grotesk", "Verdana", sans-serif;
+    }
+    .side-panel a:hover {
+      background: rgba(11, 31, 42, 0.08);
+      color: #0b1f2a;
+    }
+    .card {
+      background: rgba(247, 249, 251, 0.92);
+      border-radius: 16px;
+      padding: 30px;
+      color: #0b1f2a;
+      box-shadow: 0 18px 30px rgba(0, 0, 0, 0.2);
+    }
+    .grid-two {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .badge {
+      align-self: flex-start;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(241, 196, 15, 0.5);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .field {
+      margin-bottom: 12px;
+    }
+    .field label {
+      font-size: 0.85rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(11, 31, 42, 0.2);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .primary-button,
+    .secondary-button {
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .primary-button {
+      background: #06121e;
+      color: #f2f6fb;
+    }
+    .secondary-button {
+      background: transparent;
+      border: 1px solid rgba(11, 31, 42, 0.4);
+      color: #0b1f2a;
+    }
+    .warning-badge {
+      display: inline-block;
+      background: #e53935;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 999px;
+      padding: 2px 10px;
+      margin-left: 8px;
+      font-size: 0.85em;
+    }
+    .warning-text {
+      color: #e53935;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .tab-button {
+      border-radius: 8px;
+      border: 1px solid rgba(11, 31, 42, 0.4);
+      padding: 8px 14px;
+      background: transparent;
+      color: #0b1f2a;
+      cursor: pointer;
+    }
+    .tab-button.active {
+      background: #0b1f2a;
+      color: #f2f6fb;
+    }
+    .hero {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(7, 19, 33, 0.9), rgba(15, 43, 72, 0.95));
+      color: #f2f6fb;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(3, 7, 15, 0.6);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(2rem, 2vw + 1rem, 2.6rem);
+      line-height: 1.2;
+    }
+    .hero-subtitle {
+      margin: 0;
+      color: rgba(242, 246, 251, 0.8);
+      max-width: 480px;
+    }
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(241, 196, 15, 0.15);
+      color: #f1c40f;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .hero-actions .nav-button {
+      background: #f1c40f;
+      color: #0b1f2a;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .hero-tags span {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 0.75rem;
+    }
+    .hero-stats {
+      display: grid;
+      gap: 16px;
+    }
+    .hero-stat {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hero-stat strong {
+      display: block;
+      font-size: 1.8rem;
+      margin-top: 6px;
+    }
+    .hero-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(241, 196, 15, 0.15);
+      color: #f2d58d;
+      font-size: 0.9rem;
+    }
+    .form-disabled {
+      opacity: 0.65;
+    }
+    .form-disabled input,
+    .form-disabled select,
+    .form-disabled button {
+      pointer-events: none;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+    }
+    .table th,
+    .table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(11, 31, 42, 0.1);
+      font-size: 0.9rem;
+    }
+    footer {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 20px 0;
+    }
+    @media (max-width: 900px) {
+      .page-layout {
+        flex-direction: column;
+      }
+      .side-panel {
+        width: 100%;
+        position: static;
+      }
+    }
+    @media (max-width: 720px) {
+      header {
+        padding: 14px;
+      }
+      main {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="politi.png" alt="Hovedstadens Politi" width="48" height="48">
+        <span>POLintra</span>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-link" href="index.html">Forside</a>
+        <a class="nav-link" href="polsas.html">POLSAS</a>
+        <a class="nav-link" href="hurtig-polsas.html">Hurtig POLSAS</a>
+        <a class="nav-link" href="opret-sag.html">Opret sag</a>
+        <a class="nav-button" href="#login">Login</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-layout">
+      <div class="page-content">
+    <section class="card hero" aria-label="Hero">
+      <div class="hero-copy">
+        <div class="hero-label">POLintra adgang</div>
+        <h1>POLintra er intranettet til drift, nyheder og sagsstyring</h1>
+        <p class="hero-subtitle">Overblik over afdelingernes ledelse, POLSAS-sager og lederbeskeder samlet ét sikkert miljø for Hovedstadens Politi.</p>
+        <div class="hero-actions">
+          <a class="nav-button" href="#login-card">Log ind</a>
+          <a class="nav-link" href="opret-sag.html">Opret sag</a>
+        </div>
+        <div class="hero-tags">
+          <span>Rollebasseret</span>
+          <span>Drift & nyheder</span>
+          <span>Lokale POLSAS</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <article class="hero-stat">
+          <p class="muted">Aktive betjente</p>
+          <strong>18</strong>
+          <small>demo-login in use</small>
+        </article>
+        <article class="hero-stat">
+          <p class="muted">Nyheder denne uge</p>
+          <strong>6</strong>
+          <small>inkl. drift og patrouiller</small>
+        </article>
+        <article class="hero-stat">
+          <p class="muted">POLAS sager</p>
+          <strong>12</strong>
+          <small>med frister og status</small>
+        </article>
+        <p class="hero-note">Alt indhold gemmes lokalt i din browser for at holde demo data adskilt.</p>
+      </div>
+    </section>
+
+    
+
+    <section class="card" id="login-card">
+      <h1>Velkommen til POLintra</h1>
+      <p>M�des, del nyheder og koordin�r i �t sikkert intranet.</p>
+      <div class="grid-two">
+        <div>
+          <p class="muted">Kontakt en leder for officielle loginoplysninger. Der findes demo-login som kun gemmes i browseren.</p>
+        </div>
+        <form id="login-form">
+          <div class="field">
+            <label for="login-username">Brugernavn</label>
+            <input id="login-username" name="login-username" type="text" placeholder="KC-XX-XX" required>
+          </div>
+          <div class="field">
+            <label for="login-code">Kode</label>
+            <input id="login-code" name="login-code" type="password" placeholder="Adgangskode" required>
+          </div>
+          <div class="actions">
+            <button class="primary-button" type="submit">Log ind</button>
+            <button class="secondary-button" type="button" id="demo-login">Demo-login</button>
+          </div>
+          <p id="login-error" class="error hidden">Forkert brugernavn eller kode.</p>
+        </form>
+      </div>
+    </section>
+
+
+    <div id="protected-sections" class="hidden">
+      <section class="card">
+        <div class="panel-header">
+          <div>
+            <h2 id="welcome-text">POLintra - betjening</h2>
+            <p class="muted" id="current-role"></p>
+          </div>
+        <div class="tab-bar">
+          <button class="tab-button active" data-tab="tab-users">Brugere</button>
+          <button class="tab-button" data-tab="tab-ansatte">Ansatte</button>
+          <button class="tab-button" data-tab="tab-drift">Drift</button>
+          <button class="tab-button" data-tab="tab-polsas">POLSAS</button>
+          <button class="tab-button" id="logout-btn">Log ud</button>
+        </div>
+      </div>
+
+      <div id="tab-users" class="tab-panel show">
+          <div class="grid-two">
+            <div id="new-user-panel">
+              <h3>Opret ny bruger</h3>
+              <form id="new-user-form">
+                <div class="field">
+                  <label for="new-username">Brugernavn</label>
+                  <input id="new-username" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="new-code">Kode</label>
+                  <input id="new-code" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="new-role">Rolle</label>
+                  <select id="new-role">
+                    <option value="Politielev (perm grade 1)">Politielev</option>
+                    <option value="Politibetjent (perm grade 1)">Politibetjent</option>
+                    <option value="Politikommissor (perm grade 2)">Politikommissor</option>
+                    <option value="Vicepolitiinspektor (perm grade 2)">Vicepolitiinspektor</option>
+                    <option value="Politiinspektor (perm grade 2)">Politiinspektor</option>
+                    <option value="Chefpolitiinspektor (perm grade 3)">Chefpolitiinspektor</option>
+                    <option value="Stabschef (perm grade 3)">Stabschef</option>
+                    <option value="Vicepolitidirektor (grade 3)">Vicepolitidirektor</option>
+                    <option value="Politidirektor (grade 4)">Politidirektor</option>
+                    <option value="Rigspolitichef (grade 5)">Rigspolitichef</option>
+                    <option value="Administrator">Administrator</option>
+                  </select>
+                </div>
+                <div class="actions">
+                  <button class="primary-button" type="submit">Gem</button>
+                  <span class="muted" id="new-user-status"></span>
+                </div>
+              </form>
+            </div>
+            <div>
+              <h3>Aktive brugere</h3>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Brugernavn</th>
+                    <th>Kode</th>
+                    <th>Rolle</th>
+                    <th>Handling</th>
+                  </tr>
+                </thead>
+                <tbody id="user-table-body"></tbody>
+              </table>
+              <p class="muted">Brugere gemmes i LocalStorage.</p>
+            </div>
+          </div>
+        </div>
+        <div id="tab-ansatte" class="tab-panel">
+          <div class="grid-two">
+            <div id="employee-form-panel">
+              <h3>Tilf›j ansat</h3>
+              <form id="employee-form">
+                <div class="field">
+                  <label for="employee-name">Navn</label>
+                  <input id="employee-name" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="employee-id">Id</label>
+                  <input id="employee-id" type="text" required>
+                </div>
+                <div class="field">
+                  <label for="employee-title">Titel</label>
+                  <input id="employee-title" type="text">
+                </div>
+                <div class="actions">
+                  <button class="primary-button" type="submit">Tilf›j</button>
+                  <span class="muted" id="employee-status"></span>
+                </div>
+              </form>
+            </div>
+            <div>
+              <h3>Ansatte</h3>
+              <p class="muted">Data fra h†ndbogens "Ansatte"-ark. Grade 2+ kan redigere.</p>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Navn</th>
+                    <th>Id</th>
+                    <th>Titel</th>
+                    <th>Handling</th>
+                  </tr>
+                </thead>
+                <tbody id="employees-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+        <div id="tab-drift" class="tab-panel">
+          <div class="grid-two">
+            <div>
+              <h3>Nyheder</h3>
+              <div id="news-create">
+                <div class="field">
+                  <label for="news-title">Titel</label>
+                  <input id="news-title" type="text">
+                </div>
+                <div class="field">
+                  <label for="news-body">Indhold</label>
+                  <textarea id="news-body" rows="4"></textarea>
+                </div>
+                <button class="primary-button" id="news-publish">Udgiv nyhed</button>
+                <span id="news-status" class="muted"></span>
+              </div>
+              <div id="news-feed" style="margin-top:16px;"></div>
+            </div>
+            <div>
+              <h3>Medarbejdere</h3>
+              <input id="drift-search" type="text" placeholder="S�g medarbejder">
+              <div id="drift-users" style="margin-top:12px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-polsas" class="tab-panel">
+          <h3>Borgeranmeldelser</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Journal</th>
+                <th>Titel</th>
+                <th>Dato</th>
+                <th>Handling</th>
+              </tr>
+            </thead>
+            <tbody id="polsas-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+      </div>
+      <aside class="side-panel">
+        <h3>Genveje</h3>
+        <ul>
+          <li><a href="polintra.html">POLintra</a></li>
+          <li><a href="polintra.html#tab-drift">Medarbejdere</a></li>
+          <li><a href="opret-sag.html">Opret sag</a></li>
+          <li><a href="polsas.html">POLSAS</a></li>
+          <li><a href="index.html">Forside</a></li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Hovedstadens Politi. Alle rettigheder forbeholdes.</p>
+  </footer>
+
+  <script src="jspdf.umd.min.js"></script>
+  <script>const STORAGE_KEY = 'polintra-users';
+    const NEWS_KEY = 'polintra-news';
+    const CASES_KEY = 'polintra-cases';
+    const EMPLOYEES_KEY = 'polintra-ansatte';
+      const WARNINGS_KEY = 'polintra-warnings';
+        // Load and save warnings/notes for staff
+        const loadWarnings = () => {
+          try {
+            return JSON.parse(localStorage.getItem(WARNINGS_KEY)) || {};
+          } catch {
+            localStorage.removeItem(WARNINGS_KEY);
+            return {};
+          }
+        };
+
+        const saveWarnings = (data) => {
+          localStorage.setItem(WARNINGS_KEY, JSON.stringify(data));
+        };
+    const seedUsers = [
+      { username: 'KC-15-23', code: '3922', role: 'Administrator' },
+      { username: 'ER-10-11', code: '1234', role: 'Politielev (perm grade 1)' }
+    ];
+    const seedEmployees = [
+      { name: 'Tristan', employeeId: '12331', title: '' },
+      { name: 'jens hansen', employeeId: '16961', title: '' },
+      { name: 'robert thomsen', employeeId: '12126', title: '' },
+      { name: 'vladimir mysagonia', employeeId: '1254', title: '' }
+    ];
+    const ROLE_GRADES = {
+      'politielev (perm grade 1)': 1,
+      'politibetjent (perm grade 1)': 1,
+      'politiinspektor (perm grade 2)': 2,
+      'chefpolitiinspektor (perm grade 3)': 3,
+      'administrator': 5
+    };
+
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const newUserForm = document.getElementById('new-user-form');
+    const userTableBody = document.getElementById('user-table-body');
+    const newUserStatus = document.getElementById('new-user-status');
+    const newUserPanel = document.getElementById('new-user-panel');
+    const employeesTableBody = document.getElementById('employees-table-body');
+    const employeeForm = document.getElementById('employee-form');
+    const employeeFormPanel = document.getElementById('employee-form-panel');
+    const employeeStatus = document.getElementById('employee-status');
+    const newsFeed = document.getElementById('news-feed');
+    const newsCreate = document.getElementById('news-create');
+    const newsTitle = document.getElementById('news-title');
+    const newsBody = document.getElementById('news-body');
+    const newsStatus = document.getElementById('news-status');
+    const newsPublish = document.getElementById('news-publish');
+    const driftUsers = document.getElementById('drift-users');
+    const driftSearch = document.getElementById('drift-search');
+    const polsasTable = document.getElementById('polsas-table-body');
+    const polsasTabButton = document.querySelector('[data-tab="tab-polsas"]');
+    const polsasTabPanel = document.getElementById('tab-polsas');
+    const tabs = Array.from(document.querySelectorAll('.tab-button'));
+    const sections = Array.from(document.querySelectorAll('.tab-panel'));
+    const protectedSections = document.getElementById('protected-sections');
+    const casesSection = document.getElementById('cases-section');
+    const welcomeText = document.getElementById('welcome-text');
+    const currentRoleText = document.getElementById('current-role');
+    const loginCard = document.getElementById('login-card');
+
+    const loadUsers = () => {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        const merged = [...stored];
+        seedUsers.forEach((seed) => {
+          if (!merged.some((u) => u.username.toLowerCase() === seed.username.toLowerCase())) {
+            merged.push(seed);
+          }
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+        return merged;
+      } catch {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(seedUsers));
+        return [...seedUsers];
+      }
+    };
+
+    const saveUsers = (users) => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+    };
+
+    const loadEmployees = () => {
+      try {
+        const stored = JSON.parse(localStorage.getItem(EMPLOYEES_KEY)) || [];
+        if (!Array.isArray(stored) || stored.length === 0) {
+          localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(seedEmployees));
+          return [...seedEmployees];
+        }
+        return stored;
+      } catch {
+        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(seedEmployees));
+        return [...seedEmployees];
+      }
+    };
+
+    const saveEmployees = (items) => {
+      localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(items));
+    };
+
+    const escapeHtml = (value) =>
+      String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    const loadNews = () => {
+      try {
+        return JSON.parse(localStorage.getItem(NEWS_KEY)) || [];
+      } catch {
+        localStorage.removeItem(NEWS_KEY);
+        return [];
+      }
+    };
+
+    const saveNews = (items) => {
+      localStorage.setItem(NEWS_KEY, JSON.stringify(items));
+    };
+
+    const loadCases = () => {
+      try {
+        return JSON.parse(localStorage.getItem(CASES_KEY)) || [];
+      } catch {
+        localStorage.removeItem(CASES_KEY);
+        return [];
+      }
+    };
+
+    const renderUsers = () => {
+      const users = loadUsers();
+      if (!users.length) {
+        userTableBody.innerHTML = '<tr><td colspan=\"4\">Ingen brugere</td></tr>';
+        return;
+      }
+      userTableBody.innerHTML = users.map(user => `
+        <tr>
+          <td>${user.username}</td>
+          <td>${user.code}</td>
+          <td>${user.role}</td>
+          <td><button class="secondary-button" data-username="${user.username}">Fjern</button></td>
+        </tr>
+      `).join('');
+      updatePermissionControls();
+    };
+
+    const canDeleteNews = () => currentUser && gradeOf(currentUser.role) > 0 && gradeOf(currentUser.role) <= 2;
+
+    const renderNews = () => {
+      const items = loadNews();
+      if (!newsFeed) return;
+      if (!items.length) {
+        newsFeed.innerHTML = '<p class=\"muted\">Ingen nyheder endnu</p>';
+        return;
+      }
+      const allowDelete = canDeleteNews();
+      newsFeed.innerHTML = items.map((n, idx) => `
+        <div style="border-bottom:1px solid rgba(11, 31, 42, 0.1); padding-bottom:10px; margin-bottom:10px;">
+          <h4>${n.title}</h4>
+          <p class="muted">${n.body}</p>
+          <small class="muted">${n.createdAt}</small>
+          ${allowDelete ? `<button class="secondary-button" style="margin-left:8px;" data-delete-news="${idx}">Slet</button>` : ''}
+        </div>
+      `).join('');
+    };
+
+    const canEditEmployees = () => currentUser && gradeOf(currentUser.role) >= 2;
+
+    const renderEmployees = () => {
+      if (!employeesTableBody) return;
+      const items = loadEmployees();
+      if (!items.length) {
+        employeesTableBody.innerHTML = '<tr><td colspan=\"4\">Ingen ansatte.</td></tr>';
+        return;
+      }
+      const allowEdit = canEditEmployees();
+      employeesTableBody.innerHTML = items.map((emp, idx) => `
+        <tr data-index="${idx}">
+          <td><input class="employee-name" type="text" value="${escapeHtml(emp.name)}" ${allowEdit ? '' : 'disabled'}></td>
+          <td><input class="employee-id" type="text" value="${escapeHtml(emp.employeeId)}" ${allowEdit ? '' : 'disabled'}></td>
+          <td><input class="employee-title" type="text" value="${escapeHtml(emp.title)}" ${allowEdit ? '' : 'disabled'}></td>
+          <td>
+            ${allowEdit ? '<button class="secondary-button employee-save" type="button">Gem</button> <button class="secondary-button employee-delete" type="button">Slet</button>' : '-'}
+          </td>
+        </tr>
+      `).join('');
+    };
+
+    const renderDrift = () => {
+      const users = loadUsers();
+      const warnings = loadWarnings();
+      if (!driftUsers) return;
+      driftUsers.innerHTML = users.map(u => {
+        const userWarnings = (warnings[u.username] || []);
+        const warningCount = userWarnings.filter(w => w.type === 'warning').length;
+        let warningList = '';
+        if (userWarnings.length) {
+          warningList = '<ul style="margin:6px 0 0 0; padding-left:18px;">' +
+            userWarnings.map((w, idx) =>
+              `<li>
+                <b class="${w.type === 'warning' ? 'warning-text' : ''}">${w.type === 'warning' ? 'Varsel' : 'Bem�rkning'}:</b> ${w.text}
+                <br><span class='muted'>af ${w.giver} (${w.giverRole}), ${w.date}</span>
+                ${currentUser && gradeOf(currentUser.role) > 1 ? `<button class="secondary-button" style="margin-left:8px;padding:2px 8px;font-size:0.85em;" data-remove-warning="${u.username}" data-warning-idx="${idx}">Fjern</button>` : ''}
+              </li>`
+            ).join('') +
+            '</ul>';
+        }
+        let addForm = '';
+        if (currentUser && gradeOf(currentUser.role) > 1) {
+          addForm = `
+            <form class="warn-note-form" data-username="${u.username}" style="margin-top:8px;display:flex;gap:4px;">
+              <input type="text" name="text" placeholder="Tekst" style="flex:1;">
+              <select name="type">
+                <option value="warning">Varsel</option>
+                <option value="note">Bem�rkning</option>
+              </select>
+              <button type="submit" class="secondary-button">Tilf�j</button>
+            </form>
+          `;
+        }
+        // Counter next to name, in red if >0
+        return `
+          <div style="border-bottom:1px solid rgba(11, 31, 42, 0.1); padding:6px 0;">
+            <strong>${u.username}
+              ${warningCount > 0 ? `<span class="warning-badge" style="background:#e53935; color:#fff; margin-left:8px;">${warningCount}</span>` : ''}
+            </strong>
+            <p class="muted">${u.role}</p>
+            ${warningList}
+            ${addForm}
+          </div>
+        `;
+      }).join('');
+    };
+
+    // Remove warning/note button handler (global, only once)
+    document.addEventListener('click', function(e) {
+      const btn = e.target;
+      if (btn.matches('[data-remove-warning]')) {
+        const username = btn.getAttribute('data-remove-warning');
+        const idx = parseInt(btn.getAttribute('data-warning-idx'), 10);
+        const warnings = loadWarnings();
+        if (warnings[username]) {
+          warnings[username].splice(idx, 1);
+          saveWarnings(warnings);
+          renderDrift();
+        }
+      }
+    });
+    // Handle add warning/note form submit
+    document.addEventListener('submit', function(e) {
+      if (e.target.classList.contains('warn-note-form')) {
+        e.preventDefault();
+        if (!currentUser || gradeOf(currentUser.role) <= 1) return;
+        const form = e.target;
+        const username = form.dataset.username;
+        const text = form.text.value.trim();
+        const type = form.type.value;
+        if (!text) return;
+        const warnings = loadWarnings();
+        if (!warnings[username]) warnings[username] = [];
+        warnings[username].push({
+          text,
+          type,
+          giver: currentUser.username,
+          giverRole: currentUser.role,
+          date: new Date().toLocaleString('da-DK')
+        });
+        saveWarnings(warnings);
+        renderDrift();
+      }
+    });
+
+    const renderPolsas = () => {
+      const cases = loadCases();
+      if (!polsasTable) return;
+      if (!cases.length) {
+        polsasTable.innerHTML = '<tr><td colspan=\"4\">Ingen sager</td></tr>';
+        return;
+      }
+      polsasTable.innerHTML = cases.map(c => `
+        <tr>
+          <td>${c.journalNumber}</td>
+          <td>${c.title}</td>
+          <td>${c.createdAt}</td>
+          <td><button class="secondary-button" data-id="${c.id}">PDF</button></td>
+        </tr>
+      `).join('');
+    };
+
+    const activateTab = (id) => {
+      tabs.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === id));
+      sections.forEach(section => section.classList.toggle('show', section.id === id));
+      document.querySelector(`#${id}`).scrollIntoView({ behavior: 'smooth' });
+    };
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        activateTab(btn.dataset.tab);
+      });
+    });
+
+    const normalizeRole = (role) => (role || '').toLowerCase();
+
+    const gradeOf = (role) => ROLE_GRADES[normalizeRole(role)] || 0;
+
+    const permissionMessage = 'Kun perm grade 2 eller højere kan administrere brugere og nyheder.';
+    const hasManagerAccess = () => currentUser && gradeOf(currentUser.role) > 1;
+    const hasPolsasAccess = () => Boolean(currentUser);
+
+    const updatePolsasVisibility = () => {
+      const allowed = hasPolsasAccess();
+      if (casesSection) casesSection.classList.toggle('hidden', !allowed);
+      if (polsasTabButton) polsasTabButton.classList.toggle('hidden', !allowed);
+      if (polsasTabPanel) polsasTabPanel.classList.toggle('hidden', !allowed);
+      if (!allowed && polsasTabButton && polsasTabButton.classList.contains('active')) {
+        activateTab('tab-users');
+      }
+    };
+
+    const setNewUserFormState = (enabled) => {
+      if (!newUserForm) return;
+      newUserForm.classList.toggle('form-disabled', !enabled);
+      newUserForm.querySelectorAll('input, select, button').forEach((el) => {
+        el.disabled = !enabled;
+      });
+      if (newUserStatus) {
+        if (!enabled) {
+          newUserStatus.textContent = 'Kun perm grade 2 eller højere kan oprette brugere.';
+        } else if (newUserStatus.textContent === 'Kun perm grade 2 eller højere kan oprette brugere.') {
+          newUserStatus.textContent = '';
+        }
+      }
+    };
+
+    const updatePermissionControls = () => {
+      const allowed = hasManagerAccess();
+      if (newsPublish) newsPublish.disabled = !allowed;
+      if (newsCreate) newsCreate.classList.toggle('hidden', !allowed);
+      if (newUserPanel) newUserPanel.classList.toggle('hidden', !allowed);
+      if (employeeFormPanel) employeeFormPanel.classList.toggle('hidden', !allowed);
+      setNewUserFormState(allowed);
+      renderEmployees();
+    };
+
+    let currentUser = null;
+    const showDashboard = (user) => {
+      currentUser = user;
+      loginError.classList.add('hidden');
+      protectedSections.classList.remove('hidden');
+      updatePolsasVisibility();
+      loginCard.classList.add('hidden');
+      welcomeText.textContent = `Logget ind som ${user.username}`;
+      currentRoleText.textContent = user.role;
+      renderUsers();
+      renderNews();
+      renderEmployees();
+      renderDrift();
+      renderPolsas();
+      updatePermissionControls();
+    };
+
+    const logout = () => {
+      localStorage.removeItem('polintra-session');
+      currentUser = null;
+      protectedSections.classList.add('hidden');
+      if (casesSection) casesSection.classList.add('hidden');
+      if (polsasTabButton) polsasTabButton.classList.add('hidden');
+      if (polsasTabPanel) polsasTabPanel.classList.add('hidden');
+      loginCard.classList.remove('hidden');
+      updatePermissionControls();
+    };
+
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const code = document.getElementById('login-code').value.trim();
+      const user = loadUsers().find(u => u.username.toLowerCase() === username.toLowerCase() && u.code === code);
+      if (user) {
+        showDashboard(user);
+        localStorage.setItem('polintra-session', user.username);
+      } else {
+        loginError.classList.remove('hidden');
+      }
+    });
+
+    newUserForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!currentUser) return;
+      if (!hasManagerAccess()) {
+        newUserStatus.textContent = 'Kun perm grade 2 eller højere kan oprette brugere.';
+        return;
+      }
+      const users = loadUsers();
+      const username = document.getElementById('new-username').value.trim();
+      const code = document.getElementById('new-code').value.trim();
+      const role = document.getElementById('new-role').value;
+      if (!username || !code) {
+        newUserStatus.textContent = 'Brugernavn og kode kr�ves.';
+        return;
+      }
+      if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        newUserStatus.textContent = 'Brugernavnet findes allerede.';
+        return;
+      }
+      users.push({ username, code, role });
+      saveUsers(users);
+      newUserStatus.textContent = 'Bruger gemt.';
+      renderUsers();
+    });
+
+    newsPublish.addEventListener('click', () => {
+      if (!hasManagerAccess()) {
+        if (newsStatus) newsStatus.textContent = 'Kun perm grade 2 eller højere kan udgive nyheder.';
+        return;
+      }
+      const title = newsTitle.value.trim();
+      const body = newsBody.value.trim();
+      if (!title || !body) {
+        newsStatus.textContent = 'Titel og indhold kr�ves.';
+        return;
+      }
+      const items = loadNews();
+      items.unshift({ title, body, createdAt: new Date().toLocaleString('da-DK') });
+      saveNews(items);
+      newsStatus.textContent = 'Nyhed udgivet.';
+      newsTitle.value = '';
+      newsBody.value = '';
+      renderNews();
+    });
+
+    if (employeeForm) {
+      employeeForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!canEditEmployees()) {
+          if (employeeStatus) employeeStatus.textContent = 'Kun perm grade 2 eller hÇ÷jere kan redigere ansatte.';
+          return;
+        }
+        const name = document.getElementById('employee-name').value.trim();
+        const employeeId = document.getElementById('employee-id').value.trim();
+        const title = document.getElementById('employee-title').value.trim();
+        if (!name || !employeeId) {
+          if (employeeStatus) employeeStatus.textContent = 'Navn og id kr‹¨«ves.';
+          return;
+        }
+        const items = loadEmployees();
+        items.push({ name, employeeId, title });
+        saveEmployees(items);
+        if (employeeStatus) employeeStatus.textContent = 'Ansat tilf‹¨«jet.';
+        employeeForm.reset();
+        renderEmployees();
+      });
+    }
+
+    if (employeesTableBody) {
+      employeesTableBody.addEventListener('click', (event) => {
+        const saveBtn = event.target.closest('.employee-save');
+        const deleteBtn = event.target.closest('.employee-delete');
+        const row = event.target.closest('tr');
+        if (!row) return;
+        const idx = Number(row.dataset.index);
+        if (Number.isNaN(idx)) return;
+        const items = loadEmployees();
+        if (!items[idx]) return;
+        if (saveBtn) {
+          if (!canEditEmployees()) {
+            if (employeeStatus) employeeStatus.textContent = 'Kun perm grade 2 eller hÇ÷jere kan redigere ansatte.';
+            return;
+          }
+          const nameInput = row.querySelector('.employee-name');
+          const idInput = row.querySelector('.employee-id');
+          const titleInput = row.querySelector('.employee-title');
+          const name = nameInput ? nameInput.value.trim() : '';
+          const employeeId = idInput ? idInput.value.trim() : '';
+          const title = titleInput ? titleInput.value.trim() : '';
+          if (!name || !employeeId) {
+            if (employeeStatus) employeeStatus.textContent = 'Navn og id kr‹¨«ves.';
+            return;
+          }
+          items[idx] = { ...items[idx], name, employeeId, title };
+          saveEmployees(items);
+          if (employeeStatus) employeeStatus.textContent = 'Ansat gemt.';
+          renderEmployees();
+          return;
+        }
+        if (deleteBtn) {
+          if (!canEditEmployees()) {
+            if (employeeStatus) employeeStatus.textContent = 'Kun perm grade 2 eller hÇ÷jere kan redigere ansatte.';
+            return;
+          }
+          items.splice(idx, 1);
+          saveEmployees(items);
+          if (employeeStatus) employeeStatus.textContent = 'Ansat slettet.';
+          renderEmployees();
+        }
+      });
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updatePermissionControls();
+      const savedUser = localStorage.getItem('polintra-session');
+      if (savedUser) {
+        const users = loadUsers();
+        const match = users.find((u) => u.username === savedUser);
+        if (match) {
+          showDashboard(match);
+        }
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      const deleteNewsBtn = event.target.closest('[data-delete-news]');
+      if (deleteNewsBtn) {
+        if (!canDeleteNews()) {
+          if (newsStatus) newsStatus.textContent = 'Kun perm grade 1-2 kan slette nyheder.';
+          return;
+        }
+        const idx = Number(deleteNewsBtn.dataset.deleteNews);
+        const items = loadNews();
+        if (Number.isNaN(idx) || !items[idx]) return;
+        items.splice(idx, 1);
+        saveNews(items);
+        renderNews();
+        return;
+      }
+      if (event.target.matches('[data-username]')) {
+        const username = event.target.dataset.username;
+        const collection = loadUsers().filter(u => u.username !== username);
+        saveUsers(collection);
+        renderUsers();
+      }
+    });
+
+    if (driftSearch) {
+      driftSearch.addEventListener('input', renderDrift);
+    }
+
+    if (polsasTable) {
+      polsasTable.addEventListener('click', (event) => {
+        if (event.target.dataset.action === 'pdf-case') {
+          const id = event.target.dataset.id;
+          const found = loadCases().find((c) => String(c.id) === String(id));
+          if (found) {
+            const doc = new window.jspdf.jsPDF();
+            doc.text(`POLSAS: ${found.title}`, 14, 20);
+            doc.save(`sag-${found.id}.pdf`);
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+

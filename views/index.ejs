@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hjemmeside</title>
+    <link rel="stylesheet" href="/ui">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="/download.png" alt="Logo" style="width: 50px; height: auto;">
+                Mattricks Hjemmeside
+            </div>
+            <ul>
+                <li><a href="#home">Hjem</a></li>
+                <li><a href="#about">Om</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+            <div class="auth">
+                <% if (user) { %>
+                    <span>Velkommen, <%= user.username %></span>
+                    <a href="/logout">Log ud</a>
+                <% } else { %>
+                    <a href="/auth/discord">Login med Discord</a>
+                <% } %>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside>
+            <h3>Menu</h3>
+            <ul>
+                <li><a href="#home">Forside</a></li>
+                <li><a href="#news">Nyheder</a></li>
+                <li><a href="#services">Tjenester</a></li>
+                <li><a href="#about">Om Os</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <section id="home">
+                <div class="hero">
+                    <img src="/download.png" alt="Logo" style="width: 200px; height: auto; margin-bottom: 20px;">
+                    <h1>Velkommen til Mattricks Hjemmeside</h1>
+                    <p>En professionel platform for innovation og teknologi. Oplev vores moderne løsninger.</p>
+                    <a href="#about" class="cta-button">Lær mere</a>
+                </div>
+            </section>
+
+            <section id="news">
+                <h2>Nyheder</h2>
+                <div class="news-item">
+                    <h3>Ny opdatering lanceret</h3>
+                    <p>Vi har lanceret en ny funktion til bedre brugeroplevelse.</p>
+                    <small>7. januar 2026</small>
+                </div>
+                <div class="news-item">
+                    <h3>Discord integration</h3>
+                    <p>Tilmeld dig vores Discord-server for opdateringer.</p>
+                    <small>6. januar 2026</small>
+                </div>
+            </section>
+
+            <section id="services">
+                <h2>Vores Tjenester</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3>Webudvikling</h3>
+                        <p>Skabe moderne og responsive hjemmesider.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Software</h3>
+                        <p>Udvikle skræddersyede programmer og apps.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Konsultation</h3>
+                        <p>Rådgivning om teknologi og innovation.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact">
+                <h2>Kontakt</h2>
+                <p>Kontakt os for samarbejde eller forespørgsler. Vi er tilgængelige via Discord eller email.</p>
+                <img src="/download.png" alt="Contact" style="width: 150px; height: auto; margin-top: 20px;">
+            </section>
+
+            <div class="discord-section">
+                <h2>Tilmeld dig vores Discord</h2>
+                <iframe src="https://discord.com/widget?id=YOUR_SERVER_ID&theme=light" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Mattricks Hjemmeside. Alle rettigheder forbeholdes.</p>
+    </footer>
+</body>
+</html>

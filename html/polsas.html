@@ -1,0 +1,797 @@
+﻿<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLSAS - Politiets sager</title>
+    <style>
+body {
+    font-family: "Merriweather", "Georgia", serif;
+    margin: 0;
+    padding: 70px 80px 90px;
+    background: linear-gradient(160deg, #0b1f2a 0%, #16344a 45%, #0f2a3a 100%);
+    background-attachment: fixed;
+    color: #eef3f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+}
+
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 7, 12, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.login-overlay .card {
+    width: min(380px, 90%);
+    padding: 32px;
+    text-align: center;
+}
+
+.login-card form {
+    margin-top: 16px;
+}
+
+.login-card .field {
+    margin-bottom: 12px;
+}
+
+.login-card .field input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(11, 31, 42, 0.2);
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.login-card .error {
+    color: #f1c40f;
+    margin-top: 6px;
+    font-size: 0.85rem;
+}
+
+header {
+    background: #0b1f2a;
+    color: #f2f6fb;
+    padding: 16px 28px;
+    box-shadow: 0 6px 18px rgba(8, 23, 33, 0.25);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.4em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.logo img {
+    margin-right: 12px;
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: #f1c40f;
+    padding: 6px;
+}
+
+.nav-links a {
+    color: #f2f6fb;
+    text-decoration: none;
+    margin-left: 12px;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    font-weight: 600;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+.page-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.page-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.side-panel {
+    width: 220px;
+    background: #f7f9fb;
+    color: #0b1f2a;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 2px 0 12px rgba(13, 32, 45, 0.12);
+    position: sticky;
+    top: 90px;
+}
+
+.side-panel h3 {
+    margin: 0 0 12px;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.side-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-panel li {
+    margin-bottom: 10px;
+}
+
+.side-panel a {
+    color: #1f2a33;
+    text-decoration: none;
+    display: block;
+    padding: 6px 8px;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.side-panel a:hover {
+    background: rgba(11, 31, 42, 0.08);
+    color: #0b1f2a;
+}
+
+@media (max-width: 900px) {
+    .page-layout {
+        flex-direction: column;
+    }
+    .side-panel {
+        width: 100%;
+        position: static;
+    }
+    .page-content {
+        justify-content: stretch;
+    }
+}
+
+main.locked {
+    display: none;
+}
+
+.card {
+    background: #f7f9fb;
+    color: #0b1f2a;
+    padding: 34px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(13, 32, 45, 0.15);
+    width: min(1100px, 100%);
+}
+
+.card h1,
+.card h2 {
+    margin: 0 0 12px;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.muted {
+    color: #4b5b67;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.table th,
+.table td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #d6dce2;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.primary-button {
+    background: #0b1f2a;
+    color: #f2f6fb;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.primary-button:hover {
+    background: #132d3a;
+    transform: translateY(-2px);
+}
+
+.ghost-button {
+    background: transparent;
+    color: #0b1f2a;
+    border: 1px solid #0b1f2a;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    font-weight: 600;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.field input,
+.field select,
+.field textarea {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #d6dce2;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+.dropzone {
+    border: 1px dashed #0b1f2a;
+    border-radius: 10px;
+    padding: 16px;
+    background: rgba(11, 31, 42, 0.05);
+    text-align: center;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    color: #0b1f2a;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(11, 31, 42, 0.08);
+    font-weight: 700;
+    color: #0b1f2a;
+}
+
+footer {
+    background: #0b1f2a;
+    color: #f2f6fb;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+    box-shadow: 0 -6px 18px rgba(13, 32, 45, 0.2);
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+
+footer p {
+    margin: 0;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="politi.png" alt="Hovedstadens Politi logo">
+                POLSAS
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Forside</a>
+                <a href="polintra.html">POLintra</a>
+                <button class="ghost-button hidden" id="polsas-logout" type="button">Log ud</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="login-overlay" id="polsas-gate">
+        <div class="card login-card">
+            <h2>POLSAS adgang</h2>
+            <p class="muted">Du skal være logget ind på POLintra for at åbne POLSAS.</p>
+            <div class="actions">
+                <a class="nav-button" href="polintra.html">Log ind på POLintra</a>
+            </div>
+            <p id="login-error" class="error hidden"></p>
+        </div>
+    </div>
+
+    <main>
+        <div class="page-layout">
+            <div class="page-content">
+                <div class="card">
+            <h1>POLSAS</h1>
+            <p class="muted">POLSAS sagsbehandling (politi). Drop/tilføj PDF, angiv J.nr., titel og kategori. Ligger separat fra borgeranmeldelser.</p>
+
+            <form id="polsas-form">
+                <div class="input-grid">
+                    <div class="field">
+                        <label for="polsas-journal">Journalnummer</label>
+                        <input id="polsas-journal" name="polsas-journal" type="text" placeholder="1000-xxxx-xxxxx-26" required>
+                    </div>
+                    <div class="field">
+                        <label for="polsas-title">Titel</label>
+                        <input id="polsas-title" name="polsas-title" type="text" required>
+                    </div>
+                    <div class="field">
+                        <label for="polsas-category">Kategori</label>
+                        <select id="polsas-category" name="polsas-category" required>
+                            <option value="">Vælg kategori</option>
+                            <option value="indbrud">Indbrud</option>
+                            <option value="tyveri">Tyveri</option>
+                            <option value="hærværk">Hærværk</option>
+                            <option value="vold">Vold</option>
+                            <option value="andet">Andet</option>
+                        </select>
+                    </div>
+
+                    <div class="field full">
+                        <label>PDF</label>
+                        <div id="dropzone" class="dropzone">Træk PDF hertil eller vælg fil</div>
+                        <input id="polsas-pdf" name="polsas-pdf" type="file" accept="application/pdf" style="margin-top:8px;">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="primary-button" type="submit">Opret sag</button>
+                    <button class="ghost-button" type="reset">Ryd</button>
+                </div>
+            </form>
+
+            <h2>Aktive sager</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>J.nr.</th>
+                        <th>Titel</th>
+                        <th>Kategori</th>
+                        <th>Frist</th>
+                        <th>Retsmøde</th>
+                        <th>Oprettet</th>
+                        <th>Handling</th>
+                    </tr>
+                </thead>
+                <tbody id="polsas-table-body"></tbody>
+            </table>
+            <h2>Henlagte sager</h2>
+                        <h2>Frister</h2>
+                        <p class="muted">Her ses alle sager med frist. Frister kan redigeres på hver sag.</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>J.nr.</th>
+                                    <th>Titel</th>
+                                    <th>Frist</th>
+                                    <th>Handling</th>
+                                </tr>
+                            </thead>
+                            <tbody id="polsas-table-frister"></tbody>
+                        </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>J.nr.</th>
+                        <th>Titel</th>
+                        <th>Kategori</th>
+                        <th>Frist</th>
+                        <th>Retsmøde</th>
+                        <th>Oprettet</th>
+                        <th>Handling</th>
+                    </tr>
+                </thead>
+                <tbody id="polsas-table-henlagt"></tbody>
+            </table>
+                </div>
+            </div>
+            <aside class="side-panel">
+                <h3>Genveje</h3>
+                <ul>
+                    <li><a href="polintra.html">POLintra</a></li>
+                    <li><a href="polintra.html#tab-drift">Medarbejdere</a></li>
+                    <li><a href="opret-sag.html">Opret sag</a></li>
+                    <li><a href="polsas.html">POLSAS</a></li>
+                    <li><a href="index.html">Forside</a></li>
+                </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Hovedstadens Politi. Alle rettigheder forbeholdes.</p>
+    </footer>
+
+    <script src="jspdf.umd.min.js"></script>
+    <script>
+        const CASES_KEY = 'polsas-cases';
+        const POLINTRA_SESSION_KEY = 'polintra-session';
+        const POLINTRA_STORAGE_KEY = 'polintra-users';
+        const FALLBACK_USERS = [
+            { username: 'KC-15-23', code: '3922', role: 'Administrator' },
+            { username: 'ER-10-11', code: '1234', role: 'Politielev (perm grade 1)' }
+        ];
+        const ROLE_GRADES = {
+            'politielev (perm grade 1)': 1,
+            'politibetjent (perm grade 1)': 1,
+            'politikommissor (perm grade 2)': 2,
+            'vicepolitiinspektor (perm grade 2)': 2,
+            'politiinspektor (perm grade 2)': 2,
+            'chefpolitiinspektor (perm grade 3)': 3,
+            'stabschef (perm grade 3)': 3,
+            'vicepolitidirektor (grade 3)': 3,
+            'politidirektor (grade 4)': 4,
+            'rigspolitichef (grade 5)': 5,
+            'administrator': 5
+        };
+        const gate = document.getElementById('polsas-gate');
+        const gateMessage = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('polsas-logout');
+        const mainContent = document.querySelector('main');
+
+        const lockContent = () => {
+            if (mainContent) mainContent.classList.add('locked');
+            if (gate) gate.classList.remove('hidden');
+            if (logoutBtn) logoutBtn.classList.add('hidden');
+            showGateMessage();
+        };
+
+        const unlockContent = (username) => {
+            if (mainContent) mainContent.classList.remove('locked');
+            if (gate) gate.classList.add('hidden');
+            if (logoutBtn) logoutBtn.classList.remove('hidden');
+        };
+
+        const clearSession = () => {
+            lockContent();
+            if (gateMessage) {
+                gateMessage.textContent = 'Log ind via POLintra.';
+                gateMessage.classList.remove('hidden');
+            }
+        };
+
+        const normalizeRole = (role) => (role || '').toLowerCase();
+
+        const gradeOf = (role) => ROLE_GRADES[normalizeRole(role)] || 0;
+
+        const loadPolintraUsers = () => {
+            try {
+                const stored = JSON.parse(localStorage.getItem(POLINTRA_STORAGE_KEY)) || [];
+                const merged = [...stored];
+                FALLBACK_USERS.forEach((fallback) => {
+                    const exists = merged.some((user) => user.username.toLowerCase() === fallback.username.toLowerCase());
+                    if (!exists) merged.push(fallback);
+                });
+                localStorage.setItem(POLINTRA_STORAGE_KEY, JSON.stringify(merged));
+                return merged;
+            } catch {
+                localStorage.setItem(POLINTRA_STORAGE_KEY, JSON.stringify(FALLBACK_USERS));
+                return [...FALLBACK_USERS];
+            }
+        };
+
+        const hasAccess = () => {
+            const username = localStorage.getItem(POLINTRA_SESSION_KEY);
+            if (!username) return false;
+            const users = loadPolintraUsers();
+            const user = users.find((entry) => entry.username === username);
+            return Boolean(user && gradeOf(user.role) > 0);
+        };
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem(POLINTRA_SESSION_KEY);
+                clearSession();
+            });
+        }
+
+        const showGateMessage = () => {
+            if (gateMessage) {
+                gateMessage.textContent = 'Log ind via POLintra.';
+                gateMessage.classList.remove('hidden');
+            }
+        };
+
+        const loadCases = () => {
+            try {
+                return JSON.parse(localStorage.getItem(CASES_KEY)) || [];
+            } catch (err) {
+                localStorage.removeItem(CASES_KEY);
+                return [];
+            }
+        };
+
+        const saveCases = (items) => localStorage.setItem(CASES_KEY, JSON.stringify(items));
+
+        const makeCaseId = () => `polsas-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+        const normalizeCategory = (value) =>
+            (value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+
+        const CATEGORY_PREFIX = {
+            indbrud: '1000-75171',
+            tyveri: '1000-75411',
+            vold: '1000-73212',
+            andet: '1000-73212',
+            hervrk: '1000-73212'
+        };
+
+        const buildJournalNumber = (category, cases) => {
+            const key = normalizeCategory(category);
+            const prefix = CATEGORY_PREFIX[key] || '1000-73212';
+            const count = cases.filter((c) => normalizeCategory(c.category) === key).length + 1;
+            const sequence = String(count).padStart(5, '0');
+            return `${prefix}-${sequence}-26`;
+        };
+
+        const autoFillJournalNumber = () => {
+            const categorySelect = document.getElementById('polsas-category');
+            const journalInput = document.getElementById('polsas-journal');
+            if (!journalInput) return;
+            if (!categorySelect || !categorySelect.value) {
+                journalInput.value = '';
+                return;
+            }
+            const cases = loadCases();
+            journalInput.value = buildJournalNumber(categorySelect.value, cases);
+        };
+
+        const formatShortDate = (value) => {
+            const d = value ? new Date(value) : null;
+            if (!d || Number.isNaN(d.getTime())) return '-';
+            return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
+        };
+
+        const downloadPdfData = (item) => {
+            if (!item.pdfData) return;
+            const link = document.createElement('a');
+            link.href = item.pdfData;
+            link.download = `sag-${item.journalNumber || item.id || Date.now()}.pdf`;
+            link.click();
+        };
+
+        const renderPolsas = () => {
+            const tbodyAktiv = document.getElementById('polsas-table-body');
+            const tbodyHenlagt = document.getElementById('polsas-table-henlagt');
+            const tbodyFrister = document.getElementById('polsas-table-frister');
+            if (!tbodyAktiv || !tbodyHenlagt || !tbodyFrister) return;
+            const list = loadCases();
+            const aktive = list.filter((c) => c.status !== 'Henlagt');
+            const henlagte = list.filter((c) => c.status === 'Henlagt');
+            const frister = list.filter((c) => c.frist);
+
+            const activeMarkup = aktive
+                .map(
+                    (c) => `
+                    <tr>
+                        <td>${c.journalNumber || '-'}</td>
+                        <td>${c.title || ''}</td>
+                        <td>${c.category || ''}</td>
+                        <td>${c.frist ? formatShortDate(c.frist) : '-'} <button class="ghost-button" data-action="edit-frist" data-id="${c.id}">Rediger</button></td>
+                        <td>${c.retsmoede ? formatShortDate(c.retsmoede) : '-'} <button class="ghost-button" data-action="edit-retsmoede" data-id="${c.id}">Rediger</button></td>
+                        <td>${formatShortDate(c.createdAt)}</td>
+                        <td>
+                            <button class="primary-button" data-action="pdf-case" data-id="${c.id}">Åbn PDF</button>
+                            <button class="ghost-button" data-action="close-case" data-id="${c.id}">Henlagt</button>
+                        </td>
+                    </tr>
+                `
+                )
+                .join('');
+            const henlagteMarkup = henlagte
+                .map(
+                    (c) => `
+                    <tr>
+                        <td>${c.journalNumber || '-'}</td>
+                        <td>${c.title || ''}</td>
+                        <td>${c.category || ''}</td>
+                        <td>${c.frist ? formatShortDate(c.frist) : '-'} <button class="ghost-button" data-action="edit-frist" data-id="${c.id}">Rediger</button></td>
+                        <td>${c.retsmoede ? formatShortDate(c.retsmoede) : '-'} <button class="ghost-button" data-action="edit-retsmoede" data-id="${c.id}">Rediger</button></td>
+                        <td>${formatShortDate(c.createdAt)}</td>
+                        <td>
+                            <span class="pill">${c.status || 'Henlagt'}</span>
+                            <button class="primary-button" data-action="pdf-case" data-id="${c.id}">Åbn PDF</button>
+                        </td>
+                    </tr>
+                `
+                )
+                .join('');
+            const fristerMarkup = frister
+                .map(
+                    (c) => `
+                    <tr>
+                        <td>${c.journalNumber || '-'}</td>
+                        <td>${c.title || ''}</td>
+                        <td>${c.frist ? formatShortDate(c.frist) : '-'} <button class="ghost-button" data-action="edit-frist" data-id="${c.id}">Rediger</button></td>
+                        <td><button class="primary-button" data-action="pdf-case" data-id="${c.id}">Åbn PDF</button></td>
+                    </tr>
+                `
+                )
+                .join('');
+            tbodyAktiv.innerHTML = activeMarkup || '<tr><td colspan="7">Ingen aktive sager.</td></tr>';
+            tbodyHenlagt.innerHTML = henlagteMarkup || '<tr><td colspan="7">Ingen henlagte sager.</td></tr>';
+            tbodyFrister.innerHTML = fristerMarkup || '<tr><td colspan="4">Ingen frister sat.</td></tr>';
+            autoFillJournalNumber();
+        };
+
+        const ensureAccess = () => {
+            if (hasAccess()) {
+                unlockContent();
+            } else {
+                lockContent();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            ensureAccess();
+            const form = document.getElementById('polsas-form');
+            const categorySelect = document.getElementById('polsas-category');
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('polsas-pdf');
+            window.droppedFile = null;
+            if (categorySelect) {
+                categorySelect.addEventListener('change', autoFillJournalNumber);
+            }
+            renderPolsas();
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const journalNumber = document.getElementById('polsas-journal').value.trim();
+                const title = document.getElementById('polsas-title').value.trim();
+                const category = document.getElementById('polsas-category').value;
+                const file = droppedFile || (fileInput ? fileInput.files[0] : null);
+                if (!file) {
+                    alert('Vælg eller drop en PDF.');
+                    return;
+                }
+                const fristInput = document.getElementById('polsas-frist');
+                const retsmoedeInput = document.getElementById('polsas-retsmoede');
+                const frist = fristInput ? fristInput.value : null;
+                const retsmoede = retsmoedeInput ? retsmoedeInput.value : null;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const cases = loadCases();
+                    const newCase = {
+                        id: makeCaseId(),
+                        journalNumber,
+                        title,
+                        category,
+                        frist: frist || null,
+                        retsmoede: retsmoede || null,
+                        createdAt: new Date().toISOString(),
+                        status: 'Åben',
+                        pdfData: reader.result
+                    };
+                    saveCases([...cases, newCase]);
+                    renderPolsas();
+                    form.reset();
+                    window.droppedFile = null;
+                    autoFillJournalNumber();
+                    if (dropzone) dropzone.textContent = 'Træk PDF hertil eller vælg fil';
+                };
+                reader.readAsDataURL(file);
+            });
+
+            const tableBodies = ['polsas-table-body', 'polsas-table-henlagt', 'polsas-table-frister']
+                .map((id) => document.getElementById(id))
+                .filter((body) => Boolean(body));
+            tableBodies.forEach((tbody) => {
+                tbody.addEventListener('click', (event) => {
+                    let targetElement = event.target;
+                    if (!(targetElement instanceof Element)) {
+                        const parent = targetElement && targetElement.parentElement;
+                        targetElement = parent instanceof Element ? parent : null;
+                    }
+                    const actionButton = targetElement ? targetElement.closest('[data-action]') : null;
+                    if (!actionButton) return;
+                    const id = actionButton.dataset.id;
+                    if (!id) return;
+                    const list = loadCases();
+                    const idx = list.findIndex((c) => String(c.id) === String(id));
+                    if (idx === -1) return;
+                    const action = actionButton.dataset.action;
+                    if (action === 'pdf-case') {
+                        downloadPdfData(list[idx]);
+                        return;
+                    }
+                    if (action === 'close-case') {
+                        list[idx].status = 'Henlagt';
+                        saveCases(list);
+                        renderPolsas();
+                        return;
+                    }
+                    if (action === 'edit-frist') {
+                        const newFrist = prompt('Ny frist (YYYY-MM-DD):', list[idx].frist || '');
+                        if (newFrist !== null) {
+                            list[idx].frist = newFrist;
+                            saveCases(list);
+                            renderPolsas();
+                        }
+                        return;
+                    }
+                    if (action === 'edit-retsmoede') {
+                        const newRetsmoede = prompt('Ny retsmødedato (YYYY-MM-DD):', list[idx].retsmoede || '');
+                        if (newRetsmoede !== null) {
+                            list[idx].retsmoede = newRetsmoede;
+                            saveCases(list);
+                            renderPolsas();
+                        }
+                    }
+                });
+            });
+
+            if (dropzone) {
+                dropzone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropzone.style.background = 'rgba(11,31,42,0.1)';
+                });
+                dropzone.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    dropzone.style.background = 'rgba(11,31,42,0.05)';
+                });
+                dropzone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropzone.style.background = 'rgba(11,31,42,0.05)';
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type === 'application/pdf') {
+                        window.droppedFile = file;
+                        dropzone.textContent = `Valgt: ${file.name}`;
+                    } else {
+                        alert('Drop en PDF-fil.');
+                    }
+                });
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file && file.type === 'application/pdf') {
+                        window.droppedFile = file;
+                        if (dropzone) dropzone.textContent = `Valgt: ${file.name}`;
+                    }
+                });
+            }
+        });
+
+
+</script>
+</body>
+</html>
+
+

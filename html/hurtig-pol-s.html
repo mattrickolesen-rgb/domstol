@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hurtig POL S</title>
+    <style>
+        body {
+            font-family: "Merriweather", "Georgia", serif;
+            margin: 0;
+            padding: 70px 80px 90px;
+            background: linear-gradient(160deg, #0b1f2a 0%, #16344a 45%, #0f2a3a 100%);
+            color: #eef3f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+        .page-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .side-panel {
+            width: 220px;
+            background: #f7f9fb;
+            color: #0b1f2a;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 2px 0 12px rgba(13, 32, 45, 0.12);
+            position: sticky;
+            top: 90px;
+        }
+        .side-panel h3 {
+            margin: 0 0 12px;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+        .side-panel ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .side-panel li {
+            margin-bottom: 10px;
+        }
+        .side-panel a {
+            color: #1f2a33;
+            text-decoration: none;
+            display: block;
+            padding: 6px 8px;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+        .side-panel a:hover {
+            background: rgba(11, 31, 42, 0.08);
+            color: #0b1f2a;
+        }
+        @media (max-width: 900px) {
+            .page-layout {
+                flex-direction: column;
+            }
+            .side-panel {
+                width: 100%;
+                position: static;
+            }
+            .page-content {
+                justify-content: stretch;
+            }
+        }
+        .card {
+            background: #f7f9fb;
+            color: #0b1f2a;
+            padding: 34px;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(13, 32, 45, 0.15);
+            width: min(600px, 100%);
+            margin: 40px auto;
+        }
+        h1 {
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+            margin-bottom: 18px;
+        }
+        .primary-button {
+            background: #0b1f2a;
+            color: #f2f6fb;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+        .primary-button:hover {
+            background: #132d3a;
+            transform: translateY(-2px);
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .field label {
+            font-weight: 600;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+        .field input, .field select {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #d6dce2;
+            font-family: "Space Grotesk", "Verdana", sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-layout">
+        <div class="page-content">
+            <div class="card">
+                <h1>Hurtig POL S</h1>
+                <form id="hurtig-pol-s-form">
+            <div class="field">
+                <label for="journal">Journalnummer</label>
+                <input id="journal" name="journal" type="text" required>
+            </div>
+            <div class="field">
+                <label for="titel">Titel</label>
+                <input id="titel" name="titel" type="text" required>
+            </div>
+            <div class="field">
+                <label for="kategori">Kategori</label>
+                <select id="kategori" name="kategori" required>
+                    <option value="">Vælg kategori</option>
+                    <option value="indbrud">Indbrud</option>
+                    <option value="tyveri">Tyveri</option>
+                    <option value="hærværk">Hærværk</option>
+                    <option value="vold">Vold</option>
+                    <option value="andet">Andet</option>
+                </select>
+            </div>
+            <button class="primary-button" type="submit">Opret hurtig sag</button>
+                </form>
+            </div>
+        </div>
+        <aside class="side-panel">
+            <h3>Genveje</h3>
+            <ul>
+                <li><a href="polintra.html">POLintra</a></li>
+                <li><a href="polintra.html#tab-drift">Medarbejdere</a></li>
+                <li><a href="opret-sag.html">Opret sag</a></li>
+                <li><a href="polsas.html">POLSAS</a></li>
+                <li><a href="index.html">Forside</a></li>
+            </ul>
+        </aside>
+    </div>
+    <script>
+        document.getElementById('hurtig-pol-s-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Hurtig sag oprettet!');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

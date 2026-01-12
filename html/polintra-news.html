@@ -1,0 +1,378 @@
+﻿<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLintra - Nyheder</title>
+    <style>
+body {
+    font-family: "Merriweather", "Georgia", serif;
+    margin: 0;
+    padding: 40px 60px 60px;
+    background: linear-gradient(160deg, #0b1f2a 0%, #16344a 45%, #0f2a3a 100%);
+    background-attachment: fixed;
+    color: #eef3f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+}
+
+.card {
+    background: #f7f9fb;
+    color: #0b1f2a;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(13, 32, 45, 0.15);
+    margin-bottom: 20px;
+}
+
+h1, h3 {
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    margin: 0 0 12px;
+}
+
+.stack { display: flex; flex-direction: column; gap: 12px; }
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.field { display: flex; flex-direction: column; }
+.field label { font-weight: 600; margin-bottom: 6px; font-family: "Space Grotesk", "Verdana", sans-serif; }
+.field input, .field textarea {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #d6dce2;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+.field textarea { min-height: 120px; resize: vertical; }
+
+.primary-button {
+    background: #0b1f2a;
+    color: #f2f6fb;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    cursor: pointer;
+}
+
+.danger-button {
+    background: #b00020;
+    color: #f7f9fb;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+    cursor: pointer;
+}
+
+.muted { color: #4b5b67; font-size: 0.95em; }
+.news-list .card { margin: 0; }
+    .page-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+.page-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.side-panel {
+    width: 220px;
+    background: #f7f9fb;
+    color: #0b1f2a;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 2px 0 12px rgba(13, 32, 45, 0.12);
+    position: sticky;
+    top: 90px;
+}
+.side-panel h3 {
+    margin: 0 0 12px;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+.side-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.side-panel li {
+    margin-bottom: 10px;
+}
+.side-panel a {
+    color: #1f2a33;
+    text-decoration: none;
+    display: block;
+    padding: 6px 8px;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: "Space Grotesk", "Verdana", sans-serif;
+}
+.side-panel a:hover {
+    background: rgba(11, 31, 42, 0.08);
+    color: #0b1f2a;
+}
+@media (max-width: 900px) {
+    .page-layout {
+        flex-direction: column;
+    }
+    .side-panel {
+        width: 100%;
+        position: static;
+    }
+}
+</style>
+</head>
+<body>
+        <div class="page-layout">
+        <div class="page-content"><div class="card">
+        <h1>POLintra - Nyheder</h1>
+        <p class="muted">Administrer offentlige nyheder. Kræver login fra POLintra (leder, grad > 1 for at oprette/slette). Nyheder auto-slettes efter 2 dage (fastgjorte undgår kun manuel sletning).</p>
+        <div class="stack">
+            <a href="polintra.html" class="muted">Tilbage til POLintra</a>
+            <button class="primary-button" id="open-create" type="button" style="display:none; width: fit-content;">Opret nyhed</button>
+        </div>
+    </div>
+
+    <div class="card" id="news-create" style="display:none;">
+        <h3>Opret nyhed</h3>
+        <div class="input-grid">
+            <div class="field">
+                <label for="news-title">Overskrift</label>
+                <input id="news-title" type="text" placeholder="Kort titel">
+            </div>
+            <div class="field">
+                <label for="news-body">Indhold</label>
+                <textarea id="news-body" placeholder="Nyhedstekst"></textarea>
+            </div>
+            <div class="field">
+                <label><input type="checkbox" id="news-pin"> Fastgør (undgår manuel sletning)</label>
+            </div>
+        </div>
+        <button class="primary-button" id="publish-news" type="button">Udgiv nyhed</button>
+        <span class="muted" id="news-status"></span>
+    </div>
+
+    <div class="card news-list">
+        <h3>Nyheder</h3>
+        <div id="news-list" class="stack"></div>
+    </div>        </div>
+        <aside class="side-panel">
+            <h3>Genveje</h3>
+            <ul>
+                <li><a href="polintra.html">POLintra</a></li>
+                <li><a href="polintra.html#tab-drift">Medarbejdere</a></li>
+                <li><a href="opret-sag.html">Opret sag</a></li>
+                <li><a href="polsas.html">POLSAS</a></li>
+                <li><a href="index.html">Forside</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'polintra-users';
+        const SESSION_KEY = 'polintra-session-user';
+        const NEWS_KEY = 'polintra-news';
+        const ROLE_GRADES = {
+            'politielev (perm grade 1)': 1,
+            'politibetjent (perm grade 1)': 1,
+            'politikommissaer (perm grade 2)': 2,
+            'politikommissr (perm grade 2)': 2,
+            'vicepolitiinspektoer (perm grade 2)': 2,
+            'politiinspektoer (perm grade 2)': 2,
+            'chefpolitiinspektoer (perm grade 3)': 3,
+            'stabschef (perm grade 3)': 3,
+            'vicepolitidirektoer (grade 3)': 3,
+            'politidirektoer (grade 4)': 4,
+            'rigspolitichef (grade 5)': 5,
+            'administrator': 5
+        };
+
+        const normalizeRole = (role) =>
+            (role || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/æ/g, 'ae')
+                .replace(/ø/g, 'oe')
+                .replace(/å/g, 'aa')
+                .replace(/›/g, 'oe')
+                .replace(/†/g, 'a')
+                .replace(/[^a-z0-9\\s()/-]/g, '')
+                .replace(/\\s+/g, ' ')
+                .trim();
+
+        let currentUser = null;
+
+        const loadUsers = () => {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            } catch {
+                return [];
+            }
+        };
+
+        const gradeOf = (role) => {
+            const key = normalizeRole(role);
+            return ROLE_GRADES[key] || 0;
+        };
+
+        const seedDefaultNews = () => {
+            const seeded = [
+                {
+                    id: Date.now(),
+                    title: 'Velkomst fra ledelsen',
+                    body: 'Nyheder kan nu oprettes og styres af ledelsen via POLintra.',
+                    author: 'Ledelsen',
+                    role: 'Administrator',
+                    createdAt: new Date().toISOString(),
+                    pin: false
+                }
+            ];
+            localStorage.setItem(NEWS_KEY, JSON.stringify(seeded));
+            return seeded;
+        };
+
+        const loadNews = () => {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(NEWS_KEY)) || [];
+                return parsed.length ? parsed : seedDefaultNews();
+            } catch {
+                localStorage.removeItem(NEWS_KEY);
+                return seedDefaultNews();
+            }
+        };
+
+        const saveNews = (items) => {
+            localStorage.setItem(NEWS_KEY, JSON.stringify(items));
+        };
+
+        const pruneNews = (items) => {
+            const now = Date.now();
+            const cutoff = 1000 * 60 * 60 * 24 * 2; // 2 dage
+            const filtered = items.filter((n) => {
+                if (!n.createdAt) return false;
+                const age = now - new Date(n.createdAt).getTime();
+                return age <= cutoff;
+            });
+            if (filtered.length !== items.length) saveNews(filtered);
+            return filtered;
+        };
+
+        const renderNews = () => {
+            const listElem = document.getElementById('news-list');
+            const createBox = document.getElementById('news-create');
+            const publishBtn = document.getElementById('publish-news');
+            const openCreateBtn = document.getElementById('open-create');
+            const status = document.getElementById('news-status');
+            const titleInput = document.getElementById('news-title');
+            const bodyInput = document.getElementById('news-body');
+            const pinInput = document.getElementById('news-pin');
+
+            let list = pruneNews(loadNews());
+            const grade = currentUser ? gradeOf(currentUser.role || 'Betjent') : 0;
+
+            if (grade > 1) {
+                openCreateBtn.style.display = 'inline-block';
+                openCreateBtn.onclick = () => {
+                    createBox.style.display = 'block';
+                    createBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                };
+                createBox.style.display = 'block';
+                publishBtn.onclick = () => {
+                    const title = titleInput.value.trim();
+                    const body = bodyInput.value.trim();
+                    const pin = pinInput.checked;
+                    if (!title) {
+                        status.textContent = 'Tilføj en overskrift.';
+                        return;
+                    }
+                    const updated = [
+                        {
+                            id: Date.now(),
+                            title,
+                            body,
+                            author: currentUser ? currentUser.username : 'Ukendt',
+                            role: currentUser ? currentUser.role : '',
+                            createdAt: new Date().toISOString(),
+                            pin
+                        },
+                        ...list
+                    ];
+                    saveNews(updated);
+                    titleInput.value = '';
+                    bodyInput.value = '';
+                    pinInput.checked = false;
+                    status.textContent = 'Nyhed udgivet.';
+                    renderNews();
+                };
+            } else {
+                createBox.style.display = 'none';
+            }
+
+            if (!list.length) {
+                listElem.innerHTML = '<p class="muted">Ingen nyheder endnu.</p>';
+                return;
+            }
+
+            listElem.innerHTML = list
+                .map(
+                    (item) => `
+                        <div class="card" style="margin:0;">
+                            <h3>${item.title}</h3>
+                            <p>${item.body || ''}</p>
+                            <small class="muted">Udgivet af ${item.author || 'Ukendt'} (${item.role || ''})</small>
+                            ${
+                                grade > 1
+                                    ? `<div class="actions" style="margin-top:8px;">
+                                            <span class="muted">${item.pin ? 'Fastgjort' : ''}</span>
+                                            ${
+                                                item.pin
+                                                    ? '<span class="muted">Kan ikke slettes manuelt</span>'
+                                                    : `<button class="danger-button" data-action="delete-news" data-id="${item.id}">Slet nyhed</button>`
+                                            }
+                                       </div>`
+                                    : ''
+                            }
+                        </div>
+                    `
+                )
+                .join('');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const users = loadUsers();
+            const savedUser = sessionStorage.getItem(SESSION_KEY);
+            if (savedUser) {
+                const match = users.find((u) => u.username === savedUser);
+                if (match) currentUser = match;
+            }
+            renderNews();
+
+            document.getElementById('news-list').addEventListener('click', (event) => {
+                const target = event.target;
+                if (target.dataset.action === 'delete-news') {
+                    const grade = currentUser ? gradeOf(currentUser.role || 'Betjent') : 0;
+                    if (grade <= 1) return;
+                    const id = target.dataset.id;
+                    const list = loadNews();
+                    const filtered = list.filter((n) => String(n.id) !== String(id));
+                    saveNews(filtered);
+                    renderNews();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
